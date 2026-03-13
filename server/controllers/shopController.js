@@ -34,3 +34,20 @@ exports.getShop = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.updateShop = async (req, res, next) => {
+  try {
+    const shop = await Shop.update(req.params.id, req.body);
+    
+    if (!shop) {
+      return next(new ApiError(404, 'Shop not found or no fields provided'));
+    }
+    
+    res.status(200).json({
+      success: true,
+      data: shop
+    });
+  } catch (err) {
+    next(err);
+  }
+};

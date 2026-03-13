@@ -7,6 +7,7 @@ const errorHandler = require('./middleware/errorMiddleware');
 // Import Routes
 const authRoutes = require('./routes/authRoutes');
 const shopRoutes = require('./routes/shopRoutes');
+const serviceRoutes = require('./routes/serviceRoutes');
 // const appointmentRoutes = require('./routes/appointmentRoutes');
 // const transactionRoutes = require('./routes/transactionRoutes');
 // const expenseRoutes = require('./routes/expenseRoutes');
@@ -22,6 +23,7 @@ app.use(cors());
 // Mount Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/shops', shopRoutes);
+app.use('/api/shops/:shopId/services', serviceRoutes);
 // app.use('/api/appointments', appointmentRoutes);
 // app.use('/api/transactions', transactionRoutes);
 // app.use('/api/expenses', expenseRoutes);

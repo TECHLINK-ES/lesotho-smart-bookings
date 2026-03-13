@@ -4,7 +4,8 @@ const Service = {
   async create(name, description, price, duration, shopId) {
     const result = await db.query(
       `INSERT INTO services (name, description, price, duration, shop_id, created_at, is_active)
-       VALUES ($1, $2, $3, $4, $5, NOW(), true) RETURNING id`,
+       VALUES ($1, $2, $3, $4, $5, NOW(), true) 
+       RETURNING *`, // <--- CHANGE THIS
       [name, description, price, duration, shopId]
     );
     return result.rows[0];
@@ -16,9 +17,7 @@ const Service = {
       [shopId]
     );
     return result.rows;
-  },
-  
-  // Add update/delete similar to Shop model
+  }
 };
 
 module.exports = Service;

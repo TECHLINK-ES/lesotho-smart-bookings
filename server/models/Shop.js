@@ -4,7 +4,8 @@ const Shop = {
   async create(name, address, phone, description, ownerId) {
     const result = await db.query(
       `INSERT INTO shops (name, address, phone, description, owner_id, created_at, is_active)
-       VALUES ($1, $2, $3, $4, $5, NOW(), true) RETURNING id`,
+       VALUES ($1, $2, $3, $4, $5, NOW(), true) 
+       RETURNING *`, // CHANGED: Returns all columns instead of just id
       [name, address, phone, description, ownerId]
     );
     return result.rows[0];
@@ -38,7 +39,10 @@ const Shop = {
     setClause.push(`updated_at = NOW()`);
     values.push(id);
 
-    const result = await db.query(`UPDATE shops SET ${setClause.join(', ')} WHERE id = $${paramCount} RETURNING *`, values);
+    const result = await db.query(
+      `UPDATE shops SET ${setClause.join(', ')} WHERE id = $${paramCount} RETURNING *`, 
+      values
+    );
     return result.rows[0];
   }
 };

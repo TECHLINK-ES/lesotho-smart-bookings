@@ -1,13 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const { createShop, getShops, getShop } = require('../controllers/shopController');
+const { createShop, getShops, getShop, updateShop } = require('../controllers/shopController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
-// Public
-router.get('/', getShops);
-router.get('/:id', getShop);
+router.route('/')
+  .get(getShops)
+  .post(protect, authorize('admin'), createShop);
 
-// Protected
-router.post('/', protect, authorize('admin', 'owner'), createShop);
+router.route('/:id')
+  .get(getShop)
+  .put(protect, authorize('admin'), updateShop); 
 
 module.exports = router;
