@@ -5,7 +5,7 @@ const Service = {
     const result = await db.query(
       `INSERT INTO services (name, description, price, duration, shop_id, created_at, is_active)
        VALUES ($1, $2, $3, $4, $5, NOW(), true) 
-       RETURNING *`, // <--- CHANGE THIS
+       RETURNING *`,  
       [name, description, price, duration, shopId]
     );
     return result.rows[0];
