@@ -14,7 +14,20 @@
     "@emotion/styled": "^11.14.1",
     "@mui/icons-material": "^7.3.5",
     "@mui/material": "^7.3.5",
+    "bcryptjs": "^3.0.3",
     "chart.js": "^4.5.1",
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "firebase": "^12.6.0",
+    "jsonwebtoken": "^9.0.3",
+    "pg": "^8.20.0",
+=======
+>>>>>>> 56eca574b1bf5d1f1f9270bdfa8430043663e059
+>>>>>>> 92e051cb58b9fc805c19dc3e3f4dc14862e0e7d3
     "react": "^19.2.0",
     "react-chartjs-2": "^5.3.1",
     "react-dom": "^19.2.0",
@@ -30,6 +43,7 @@
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.4.24",
     "globals": "^16.5.0",
+    "nodemon": "^3.1.14",
     "vite": "^7.2.2"
   }
 }
