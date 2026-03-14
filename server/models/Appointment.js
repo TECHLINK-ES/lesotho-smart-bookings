@@ -21,6 +21,37 @@ const Appointment = {
       [shopId]
     );
     return result.rows;
+  },
+
+  async update(id, data) {
+    const setClause = [];
+    const values = [];
+    let paramCount = 1;
+
+    Object.keys(data).forEach(key => {
+      if (['status', 'payment_status', 'date', 'time'].includes(key)) {
+        setClause.push(`${key} = $${paramCount}`);
+        values.push(data[key]);
+        paramCount++;
+      }
+    });
+
+    if (setClause.length === 0) return null;
+    setClause.push('updated_at = NOW()');
+    values.push(id);
+
+    const result = await db.query(
+      `UPDATE appointments SET ${setClause.join(', ')} WHERE id = $${paramCount} RETURNING *`,
+      values
+    );
+    return result.rows[0];
+  },
+  
+  async delete(id) {
+      // Hard delete or soft delete? Usually appointments are cancelled, not deleted.
+      // For CRUD sake, we will do hard delete.
+      const result = await db.query('DELETE FROM appointments WHERE id = $1 RETURNING id', [id]);
+      return result.rows[0];
   }
 };
 

@@ -44,7 +44,9 @@ const Shop = {
       values
     );
     return result.rows[0];
-  }
+  },
+  
+  
 };
 
 module.exports = Shop;

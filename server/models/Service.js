@@ -17,6 +17,39 @@ const Service = {
       [shopId]
     );
     return result.rows;
+  },
+
+
+  async update(id, data) {
+    const setClause = [];
+    const values = [];
+    let paramCount = 1;
+
+    Object.keys(data).forEach(key => {
+      if (['name', 'description', 'price', 'duration'].includes(key)) {
+        setClause.push(`${key} = $${paramCount}`);
+        values.push(data[key]);
+        paramCount++;
+      }
+    });
+
+    if (setClause.length === 0) return null;
+    setClause.push('updated_at = NOW()');
+    values.push(id);
+
+    const result = await db.query(
+      `UPDATE services SET ${setClause.join(', ')} WHERE id = $${paramCount} RETURNING *`,
+      values
+    );
+    return result.rows[0];
+  },
+
+  async delete(id) {
+    const result = await db.query(
+      "UPDATE services SET is_active = false WHERE id = $1 RETURNING id", 
+      [id]
+    );
+    return result.rows[0];
   }
 };
 

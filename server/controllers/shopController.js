@@ -51,3 +51,10 @@ exports.updateShop = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.deleteShop = async (req, res, next) => {
+  try {
+    await Shop.delete(req.params.id);
+    res.status(200).json({ success: true, data: {} });
+  } catch (err) { next(err); }
+};

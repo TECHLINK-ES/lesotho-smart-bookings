@@ -1,27 +1,22 @@
-const ApiError = require('../utils/ApiError');
-
 const errorHandler = (err, req, res, next) => {
-  let error = { ...err };
-  error.message = err.message;
+  // Standard errors don't spread nicely, so we read directly
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Server Error';
 
   // Log to console for dev
   console.error(err);
 
-  // PostgreSQL unique violation
+  // PostgreSQL unique violation (optional keep for later)
   if (err.code === '23505') {
-    const message = 'Duplicate field value entered';
-    error = new ApiError(400, message);
+    return res.status(400).json({
+      success: false,
+      error: 'Duplicate field value entered'
+    });
   }
 
-  // PostgreSQL foreign key violation
-  if (err.code === '23503') {
-    const message = 'Invalid reference ID provided';
-    error = new ApiError(400, message);
-  }
-
-  res.status(error.statusCode || 500).json({
+  res.status(statusCode).json({
     success: false,
-    error: error.message || 'Server Error'
+    error: message
   });
 };
 

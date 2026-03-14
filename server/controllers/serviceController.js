@@ -26,3 +26,17 @@ exports.getServices = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.updateService = async (req, res, next) => {
+  try {
+    const service = await Service.update(req.params.id, req.body);
+    res.status(200).json({ success: true, data: service });
+  } catch (err) { next(err); }
+};
+
+exports.deleteService = async (req, res, next) => {
+  try {
+    await Service.delete(req.params.id);
+    res.status(200).json({ success: true, data: {} });
+  } catch (err) { next(err); }
+};

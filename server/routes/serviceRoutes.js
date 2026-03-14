@@ -1,10 +1,14 @@
 const express = require('express');
-const router = express.Router({ mergeParams: true }); // mergeParams allows us to access :shopId
-const { createService, getServices } = require('../controllers/serviceController');
-const { protect } = require('../middleware/authMiddleware');
+const router = express.Router({ mergeParams: true });
+const { createService, getServices, updateService, deleteService } = require('../controllers/serviceController');
+const { protect, authorize } = require('../middleware/authMiddleware');
 
 router.route('/')
   .get(getServices)
-  .post(protect, createService);
+  .post(protect, authorize('admin', 'staff'), createService);
+
+router.route('/:id')
+  .put(protect, authorize('admin', 'staff'), updateService)
+  .delete(protect, authorize('admin'), deleteService);;
 
 module.exports = router;

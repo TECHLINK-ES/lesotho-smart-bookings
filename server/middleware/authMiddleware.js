@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const ApiError = require('../utils/ApiError');
+// const ApiError = require('../utils/ApiError'); // REMOVED
 const db = require('../config/db');
 
 const protect = async (req, res, next) => {
@@ -10,32 +10,49 @@ const protect = async (req, res, next) => {
       token = req.headers.authorization.split(' ')[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
+      // Fetch user
       const result = await db.query(
-        'SELECT id, email, name, role, shop_id FROM users WHERE id = $1',
+        'SELECT id, email, name, role, shop_id, is_active FROM users WHERE id = $1',
         [decoded.userId]
       );
 
       if (result.rows.length === 0) {
-        return next(new ApiError(401, 'Not authorized, user not found'));
+        const error = new Error('Not authorized, user not found');
+        error.statusCode = 401;
+        return next(error);
       }
 
-      req.user = result.rows[0];
+      const user = result.rows[0];
+
+      // --- NEW CHECK: Verify user is active ---
+      if (!user.is_active) {
+        const error = new Error('Not authorized, user account is deactivated');
+        error.statusCode = 401;
+        return next(error);
+      }
+
+      req.user = user;
       next();
     } catch (error) {
-      return next(new ApiError(401, 'Not authorized, token failed'));
+      const err = new Error('Not authorized, token failed');
+      err.statusCode = 401;
+      return next(err);
     }
   }
 
   if (!token) {
-    return next(new ApiError(401, 'Not authorized, no token'));
+    const error = new Error('Not authorized, no token');
+    error.statusCode = 401;
+    return next(error);
   }
 };
 
-// Role authorization middleware
 const authorize = (...roles) => {
   return (req, res, next) => {
     if (!roles.includes(req.user.role)) {
-      return next(new ApiError(403, `User role ${req.user.role} is not authorized`));
+      const error = new Error(`User role ${req.user.role} is not authorized`);
+      error.statusCode = 403;
+      return next(error);
     }
     next();
   };

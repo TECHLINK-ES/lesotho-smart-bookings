@@ -71,3 +71,24 @@ exports.getMe = async (req, res, next) => {
     next(err);
   }
 };
+
+exports.getUsers = async (req, res, next) => {
+  try {
+    const users = await User.findAll();
+    res.status(200).json({ success: true, data: users });
+  } catch (err) { next(err); }
+};
+
+exports.updateUser = async (req, res, next) => {
+  try {
+    const user = await User.update(req.params.id, req.body);
+    res.status(200).json({ success: true, data: user });
+  } catch (err) { next(err); }
+};
+
+exports.deleteUser = async (req, res, next) => {
+  try {
+    await User.delete(req.params.id);
+    res.status(200).json({ success: true, data: {} });
+  } catch (err) { next(err); }
+};
